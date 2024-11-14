@@ -59,14 +59,14 @@ namespace Tello {
     }
 
     /**
-     * 送信間隔の設定を行う、「ずっと」で使う、100~10000の間で設定する、単位はミリ秒
-     * @param 送信間隔の設定を行う value 100-10000, eg: 1000
+     * 送信間隔の設定を行う、「ずっと」で使う、1000ミリ秒
+     * @param 送信間隔の設定を行う value 1000
      */
-    //% block="送信間隔を設定する(ミリ秒) %value"
+    //% block="送信間隔を設定する(1000ミリ秒)"
     //% group="設定"
-    export function Setorder(value: number): void {
+    export function Setorder(): void {
         if (command_enable == 0) {
-            basic.pause(value)
+            basic.pause(1000)
             command_enable = 1
         }
     }
