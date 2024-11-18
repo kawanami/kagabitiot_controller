@@ -315,6 +315,22 @@ namespace Tello {
         }
     }
 
+    /**
+        * ドローンが三次元で移動します．20以下の移動は不可,speedは10以上．
+        * @param x x -500-500, eg: 0
+        * @param y y -500-500, eg: 0
+        * @param z z -500-500, eg: 0
+        * @param speed speed 10-100, eg: 0
+        */
+    //% block="【改FW必要】自由飛行(距離は±20以上) | 前後（前が＋） %x 上下（上が＋） %y 左右（左が＋） %z スピード(10以上) %speed"
+    //% group="応用"
+    export function xyz(x: number, y: number, z: number, speed: number): void {
+        if (flying == 1 && command_enable == 1) {
+            let sendstring = "go=" + x + " " + z + " " + y + " " + speed
+            radio.sendString(sendstring)
+            command_enable = 0
+        }
+    }
 }
 
 let flying = 0
