@@ -1,4 +1,4 @@
-enum MyEnumX {   
+enum MyEnumX {
     //% block="動かさない"
     NO_X = (0),
     //% block="前"
@@ -9,11 +9,11 @@ enum MyEnumX {
 
 enum MyEnumY {
     //% block="動かさない"
-    NO_Y=(0),
+    NO_Y = (0),
     //% block="上"
-    UP=(50),
+    UP = (50),
     //% block="下"
-    DOWN=(-50),
+    DOWN = (-50),
 }
 
 enum MyEnumZ {
@@ -33,36 +33,24 @@ enum MyEnumZ {
 
 
 namespace Tello {
-    /**
-     * 通信グループの設定を行う．受信機と送信機のグループ設定は合わせてね
-     * @param 通信グループの番号 value 1-100, eg: 1
-     */
-    //% block="無線グループの設定を行う %value"
-    //% group="設定"
-    export function radiosetgroup(value: number): void {
-        radio.setGroup(value)
-        radio.setFrequencyBand(value % 84)
-        radio.setTransmitPower(7)
-    }
 
     /**
      * スピードの設定を行う、20~50の間で設定する、1につき1cm進む！
      * @param スピードの設定を行う value 20-50, eg: 10
      */
-    //% block="スピードを設定する(20~50まで:初期値は30) %value"
+    //% block="スピードを設定する(20-50:初期値は30) %value"
     //% group="設定"
     export function Setspped(value: number): void {
         if (value > 50) {
-            value=50
+            value = 50
         }
         radio.sendString("speed=" + value)
     }
 
     /**
-     * 送信間隔の設定を行う、「ずっと」で使う、1000ミリ秒
-     * @param 送信間隔の設定を行う value 1000
+     * 送信間隔の設定を行う、「ずっと」で使う、1000ミリ秒単位で固定
      */
-    //% block="送信間隔を設定する(1000ミリ秒)"
+    //% block="【ずっと】送信間隔を設定する(1000ミリ秒)"
     //% group="設定"
     export function Setorder(): void {
         if (command_enable == 0) {
@@ -72,90 +60,27 @@ namespace Tello {
     }
 
     /**
-     * 受信機にドローンが上に上がる命令を送信する．
-     * その時，距離も設定し送信を行う．
-     * @param value 上に上がる距離を設定する(cm) value 20-500, eg: 20
-     */
-    //% block="うえに上がる %value"
-    //% group="初心者向け"
-    export function up(value: number): void {
-        if (flying == 1 && command_enable == 1) {
-            radio.sendString("up=" + value)
-            flying = 1
-            command_enable = 0
-        }
+     * 通信グループの設定を行う．受信機と送信機のグループ設定は合わせてね
+     * @param 通信グループの番号 value 0-255, eg: 1
+    */
+    //% block="【最初だけ】無線グループの設定を行う %value"
+    //% group="設定"
+    export function radiosetgroup(value: number): void {
+        radio.setGroup(value)
+        radio.setFrequencyBand(value % 84)
+        radio.setTransmitPower(7)
     }
 
     /**
-     * 受信機にドローンが下に下る命令を送信する．
-     * その時，距離も設定し送信を行う．
-     * @param value 下に下る距離を設定する（cm） value 20-500, eg: 20
+     * 受信機にドローンが反時計回りを行う命令を送信する．
+     * その時，角度を設定し送信を行う．
+     * @param value 反時計回りを行う角度を設定する(degrees counterclockwise) value 1-360, eg: 90
      */
-    //% block="したにさがる %value"
-    //% group="初心者向け"
-    export function down(value: number): void {
+    //% block="反時計まわり(1-360) %value"
+    //% group="基本"
+    export function rotate_ccw(value: number): void {
         if (flying == 1 && command_enable == 1) {
-            radio.sendString("down=" + value)
-            flying = 1
-            command_enable = 0
-        }
-    }
-
-    /**
-     * 受信機にドローンが前に進む命令を送信する．
-     * その時，距離も設定し送信を行う．
-     * @param value 前に進む距離を設定する（cm） value 20-500, eg: 50
-     */
-    //% block="まえにすすむ %value"
-    //% group="初心者向け"
-    export function forward(value: number): void {
-        if (flying == 1 && command_enable == 1) {
-            radio.sendString("forward=" + value)
-            flying = 1
-            command_enable = 0
-        }
-    }
-
-    /**
-     * 受信機にドローンが後ろに下がる命令を送信する．
-     * その時，距離も設定し送信を行う．
-     * @param value 後ろに下がる距離を設定する（cm） value 20-500, eg: 50
-     */
-    //% block="うしろにさがる %value"
-    //% group="初心者向け"
-    export function back(value: number): void {
-        if (flying == 1 && command_enable == 1) {
-            radio.sendString("back=" + value)
-            flying = 1
-            command_enable = 0
-        }
-    }
-
-    /**
-     * 受信機にドローンが左に進む命令を送信する．
-     * その時，距離も設定し送信を行う．
-     * @param value 左にすすむ距離を設定する（cm） value 20-500, eg: 50
-     */
-    //% block="ひだりにすすむ %value"
-    //% group="初心者向け"
-    export function left(value: number): void {
-        if (flying == 1 && command_enable == 1) {
-            radio.sendString("left=" + value)
-            flying = 1
-            command_enable = 0
-        }
-    }
-
-    /**
-     * 受信機にドローンが右に進む命令を送信する．
-     * その時，距離も設定し送信を行う．
-     * @param value 右にすすむ距離を設定する（cm） value 20-500, eg: 50
-     */
-    //% block="みぎにすすむ %value"
-    //% group="初心者向け"
-    export function right(value: number): void {
-        if (flying == 1 && command_enable == 1) {
-            radio.sendString("right=" + value)
+            radio.sendString("ccw=" + value)
             flying = 1
             command_enable = 0
         }
@@ -166,8 +91,8 @@ namespace Tello {
      * その時，角度を設定し送信を行う．
      * @param value 時計回りを行う角度を設定する(degrees clockwise) value 1-360, eg: 90
      */
-    //% block="とけいまわり %value"
-    //% group="初心者向け"
+    //% block="時計まわり(1-360) %value"
+    //% group="基本"
     export function rotate_cw(value: number): void {
         if (flying == 1 && command_enable == 1) {
             radio.sendString("cw=" + value)
@@ -176,65 +101,104 @@ namespace Tello {
         }
     }
 
+
     /**
-     * 受信機にドローンが反時計回りを行う命令を送信する．
-     * その時，角度を設定し送信を行う．
-     * @param value 反時計回りを行う角度を設定する(degrees counterclockwise) value 1-360, eg: 90
+     * 受信機にドローンが下に下る命令を送信する．
+     * その時，距離も設定し送信を行う．20-500cm．
+     * @param value 下がる距離を設定する（cm） value 20-500, eg: 20
      */
-    //% block="はんとけいまわり %value"
-    //% group="初心者向け"
-    export function rotate_ccw(value: number): void {
+    //% block="下にいく(20-500) %value"
+    //% group="基本"
+    export function down(value: number): void {
         if (flying == 1 && command_enable == 1) {
-            radio.sendString("ccw=" + value)
+            radio.sendString("down=" + value)
+            flying = 1
+            command_enable = 0
+        }
+    }
+
+
+    /**
+     * 受信機にドローンが上に上がる命令を送信する．
+     * その時，距離も設定し送信を行う．20-500cm．
+     * @param value 上がる距離を設定する(cm) value 20-500, eg: 20
+     */
+    //% block="上にいく(20-500) %value"
+    //% group="基本"
+    export function up(value: number): void {
+        if (flying == 1 && command_enable == 1) {
+            radio.sendString("up=" + value)
             flying = 1
             command_enable = 0
         }
     }
 
     /**
-     * 受信機にドローンが飛行を開始する命令を送信する．
+     * 受信機にドローンが左に進む命令を送信する．
+     * その時，距離も設定し送信を行う．20-500cm．
+     * @param value 左にすすむ距離を設定する（cm） value 20-500, eg: 50
      */
-    //% block="飛行を開始する"
-    //% group="中級者向け"
-    export function takeoff(): void {
-        if (command_enable == 1) {
-            radio.sendString("takeoff")
+    //% block="左にすすむ(20-500) %value"
+    //% group="基本"
+    export function left(value: number): void {
+        if (flying == 1 && command_enable == 1) {
+            radio.sendString("left=" + value)
             flying = 1
             command_enable = 0
         }
     }
 
     /**
-     * 受信機にドローンが着地をする命令を送信する．
-    */
-    //% block="着地をおこなう"
-    //% group="中級者向け"
-    export function land(): void {
-        if (command_enable == 1) {
-            radio.sendString("land")
-            flying = 0
+     * 受信機にドローンが右に進む命令を送信する．
+     * その時，距離も設定し送信を行う．20-500cm．
+     * @param value 右にすすむ距離を設定する（cm） value 20-500, eg: 50
+     */
+    //% block="右にすすむ(20-500) %value"
+    //% group="基本"
+    export function right(value: number): void {
+        if (flying == 1 && command_enable == 1) {
+            radio.sendString("right=" + value)
+            flying = 1
             command_enable = 0
         }
     }
 
     /**
-     * ドローンの飛行状態の変数を取得する．
-    */
-    //% block="ドローンが飛行をしている"
-    //% group="中級者向け"
-    export function getflying(): boolean {
-        if (flying == 1) {
-            return true
-        } else {
-            return false
+     * 受信機にドローンが後ろにすすむ命令を送信する．
+     * その時，距離も設定し送信を行う．20-500cm．
+     * @param value 後ろにすすむ距離を設定する（cm） value 20-500, eg: 50
+     */
+    //% block="後ろにすすむ(20-500) %value"
+    //% group="基本"
+    export function back(value: number): void {
+        if (flying == 1 && command_enable == 1) {
+            radio.sendString("back=" + value)
+            flying = 1
+            command_enable = 0
         }
     }
 
     /**
-     * コントローラー内の変数を確認して飛行を開始するか，着地を行う．
+     * 受信機にドローンが前に進む命令を送信する．
+     * その時，距離も設定し送信を行う．20-500cm．
+     * @param value 前に進む距離を設定する（cm） value 20-500, eg: 50
      */
-    //% block="ひこう/ちゃくちする"
-    //% group="初心者向け"
+    //% block="前にすすむ(20-500) %value"
+    //% group="基本"
+    export function forward(value: number): void {
+        if (flying == 1 && command_enable == 1) {
+            radio.sendString("forward=" + value)
+            flying = 1
+            command_enable = 0
+        }
+    }
+
+
+    /**
+      * コントローラー内の変数を確認して離陸するか，着陸を行う．
+      */
+    //% block="りりく/ちゃくりく"
+    //% group="基本"
     export function fly_or_land(): void {
         if (flying == 0 && command_enable == 1) {
             radio.sendString("takeoff")
@@ -248,43 +212,41 @@ namespace Tello {
     }
 
     /**
-     * ラジコンモードで動作します．
-     * かなり高難易度です．
-     * @param a left/right a -100-100, eg: 0
-     * @param b forward/backward b -100-100, eg: 0
-     * @param c up/down c -100-100, eg: 0
-     * @param d yaw d -100-100, eg: 0
+     * 受信機にドローンが離陸する命令を送信する．
      */
-    //% block="RCモード | 左右 %a 前後 %b 上下 %c ヨー %d"
-    //% group="上級者向け"
-    export function RCmode(a: number, b: number, c: number, d: number): void {
+    //% block="離陸する"
+    //% group="離陸と着陸"
+    export function takeoff(): void {
+        if (command_enable == 1) {
+            radio.sendString("takeoff")
+            flying = 1
+            command_enable = 0
+        }
+    }
+
+    /**
+     * 受信機にドローンが着陸する命令を送信する．
+    */
+    //% block="着陸する"
+    //% group="離陸と着陸"
+    export function land(): void {
+        if (command_enable == 1) {
+            radio.sendString("land")
+            flying = 0
+            command_enable = 0
+        }
+    }
+
+    /**
+     * ドローンの飛行状態の変数を取得する．
+    */
+    //% block="ドローンが飛行をしている"
+    //% group="離陸と着陸"
+    export function getflying(): boolean {
         if (flying == 1) {
-            let sendstring = "rc=" + a + " " + b + " " + c + " " + d
-            radio.sendString(sendstring)
-        }
-    }
-
-    /**
-     * ドローンが前フリップします！おしゃれ！
-     */
-    //% block="前フリップする(バッテリー50以上推奨)"
-    //% group="フリップ"
-    export function forward_flip(): void {
-        if (flying == 1 && command_enable == 1) {
-            radio.sendString("flip=f")
-            command_enable = 0
-        }
-    }
-
-    /**
-     * ドローンが後ろフリップします！おしゃれ！
-     */
-    //% block="後ろフリップする(バッテリー50以上推奨)"
-    //% group="フリップ"
-    export function back_flip(): void {
-        if (flying == 1 && command_enable == 1) {
-            radio.sendString("flip=b")
-            command_enable = 0
+            return true
+        } else {
+            return false
         }
     }
 
@@ -312,11 +274,68 @@ namespace Tello {
         }
     }
 
+    /**
+     * ドローンが後ろフリップします！おしゃれ！
+     */
+    //% block="後ろフリップする(バッテリー50以上推奨)"
+    //% group="フリップ"
+    export function back_flip(): void {
+        if (flying == 1 && command_enable == 1) {
+            radio.sendString("flip=b")
+            command_enable = 0
+        }
+    }
 
+    /**
+      * ドローンが前フリップします！おしゃれ！
+      */
+    //% block="前フリップする(バッテリー50以上推奨)"
+    //% group="フリップ"
+    export function forward_flip(): void {
+        if (flying == 1 && command_enable == 1) {
+            radio.sendString("flip=f")
+            command_enable = 0
+        }
+    }
 
+    /**
+     * ラジコンモードで動作します．
+     * かなり高難易度です．
+     * @param a left/right a -100-100, eg: 0
+     * @param b forward/backward b -100-100, eg: 0
+     * @param c up/down c -100-100, eg: 0
+     * @param d yaw d -100-100, eg: 0
+     */
+    //% block="RCモード(-100～100) | 左右 %a 前後 %b 上下 %c ヨー %d"
+    //% group="応用"
+    export function RCmode(a: number, b: number, c: number, d: number): void {
+        if (flying == 1) {
+            let sendstring = "rc=" + a + " " + b + " " + c + " " + d
+            radio.sendString(sendstring)
+        }
+    }
+    /**
+        * ドローンが三次元で移動します．20以下の移動は不可,speedは10以上．
+        * @param x x -500-500, eg: 0
+        * @param y y -500-500, eg: 0
+        * @param z z -500-500, eg: 0
+        * @param speed speed 10-100, eg: 0
+        */
+    //% block="自由飛行(距離は±20以上) | 前後（前が＋） %x 上下（上が＋） %y 左右（左が＋） %z スピード(10以上) %speed"
+    //% group="応用"
+    export function xyz(x: number, y: number, z: number, speed: number): void {
+        if (flying == 1 && command_enable == 1) {
+            let sendstring = "go=" + x + "=" + z + "=" + y + "=" + speed
+            radio.sendString(sendstring)
+            command_enable = 0
+        }
+    }
 
 }
 
 let flying = 0
 let command_enable = 1
-let camera = 0
+
+
+
+ 
